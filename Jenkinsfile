@@ -12,7 +12,7 @@ stages {
 
       // Get some code from a GitHub repository
 
-      git 'https://github.com/raknas999/game-of-life.git'
+      git 'https://github.com/jayakula/game-of-life.git'
 
       // Get the Maven tool.
      
@@ -61,16 +61,8 @@ stages {
  }
     stage('Deploy War') {
       steps {
-        sh label: '', script: 'ansible-playbook deploy.yml'
+        deploy adapters: [tomcat8(credentialsId: 'tomcatuser', path: '', url: 'http://3.86.239.121:8080/')], contextPath: null, war: '**/*.war'
       }
  }
-}
-post {
-        success {
-            archiveArtifacts 'gameoflife-web/target/*.war'
-        }
-        failure {
-            mail to:"sankar.dadi@qentelli.com", subject:"FAILURE: ${currentBuild.fullDisplayName}", body: "Build failed"
-        }
-    }       
+}       
 }
